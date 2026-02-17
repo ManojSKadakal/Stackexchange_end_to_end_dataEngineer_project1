@@ -1,0 +1,237 @@
+{
+  "datasets": [
+    {
+      "name": "e67070ea",
+      "displayName": "marts_posts_users",
+      "queryLines": [
+        "SELECT * FROM workspace.default.marts_posts_users"
+      ]
+    },
+    {
+      "name": "03445686",
+      "displayName": "marts_top_tags",
+      "queryLines": [
+        "SELECT * FROM workspace.default.marts_top_tags limit 10"
+      ]
+    },
+    {
+      "name": "0d2a7079",
+      "displayName": "User Reputation and Answer Score Insights",
+      "queryLines": [
+        "select avg(score) as average_answer_score, Reputation,Id as UserId\r\n",
+        "from default.marts_posts_users\r\n",
+        "where PostType= \"Answer\"\r\n",
+        "group by Id, Reputation"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "1f11fcbe",
+      "displayName": "User_posts Analytics",
+      "layout": [
+        {
+          "widget": {
+            "name": "62cabc06",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e67070ea",
+                  "fields": [
+                    {
+                      "name": "monthly(PostCreationDate)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `PostCreationDate`)"
+                    },
+                    {
+                      "name": "count(PostId)",
+                      "expression": "COUNT(`PostId`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(PostCreationDate)",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(PostId)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "852e4f8e",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "03445686",
+                  "fields": [
+                    {
+                      "name": "tag_exploded",
+                      "expression": "`tag_exploded`"
+                    },
+                    {
+                      "name": "sum(tags_count)",
+                      "expression": "SUM(`tags_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "tag_exploded",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "natural-order-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(tags_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "c2a90b8b",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "0d2a7079",
+                  "fields": [
+                    {
+                      "name": "UserId",
+                      "expression": "`UserId`"
+                    },
+                    {
+                      "name": "average_answer_score",
+                      "expression": "`average_answer_score`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "scatter",
+              "encodings": {
+                "x": {
+                  "fieldName": "UserId",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "average_answer_score",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 12,
+            "height": 5
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "06ffc497",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "e4664a77",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "96745549",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
